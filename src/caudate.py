@@ -8,10 +8,9 @@ def draw_background_continuously(background_x_pos):
 
 def spawn_algae():
     random_algae_pos = random.choice(algae_height)
-    bottom_algae = algae_bottom.get_rect(midtop=(700, random_algae_pos))
-    top_algae = algae_bottom.get_rect(midbottom=(700, random_algae_pos - 300))
+    bottom_algae = algae_bottom.get_rect(midtop=(600, random_algae_pos))
+    top_algae = algae_bottom.get_rect(midbottom=(600, random_algae_pos - 400))
     return bottom_algae, top_algae
-
 
 def move_algae(algaes):
     for algae in algaes:
@@ -104,13 +103,12 @@ player_surface = player_frames[player_frame_index]
 player_rect = player_surface.get_rect(center=(player_x, player_y))
 
 # algae entities
-algae_top = pygame.image.load('src/images/algae_top.png')
 algae_bottom = pygame.image.load('src/images/algae_bottom.png')
 algae_list = []
 SPAWNALGAE = pygame.USEREVENT
 
 pygame.time.set_timer(SPAWNALGAE, 1200)
-algae_height = [700, 750, 800]
+algae_height = [600, 700, 800]
 
 while True:
     for event in pygame.event.get():
@@ -119,14 +117,7 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 falling_velocity = -10
-                screen.blit(player_jump, (player_x, player_y))
-                if player_frame_index < 1:
-                   player_frame_index += 1
-                else:
-                    player_frame_index = 0 
-               
-                player_surface, player_rect = player_animation()  
-                
+                screen.blit(player_jump, (player_x, player_y))                            
             if event.key == pygame.K_SPACE and game_active == False:
                 game_active = True
                 reset_map()   
@@ -147,6 +138,12 @@ while True:
         rotated_player = rotate_player(player_surface)
         screen.blit(rotated_player, player_rect)
         game_active = check_for_collision(algae_list)
+        
+        if falling_velocity < 0:
+            player_frame_index = 1
+        else:
+            player_frame_index = 0 
+        player_surface, player_rect = player_animation()
         # algae
         draw_algae(algae_list)
         # score
