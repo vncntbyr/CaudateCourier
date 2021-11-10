@@ -1,5 +1,5 @@
 # CaudateCourier
-CaudateCourier describes the adventorous life of an caudate while traveling through the deep mountain lakes of Mexico.
+CaudateCourier describes the adventorous life of a caudate while traveling through the deep mountain lakes of Mexico.
 
 ## How to play
 - download git repos ``git clone https://github.com/vncntbyr/CaudateCourier.git``
