@@ -15,7 +15,8 @@ def spawn_algae():
 def move_algae(algaes):
     for algae in algaes:
         algae.centerx -= 5
-    return algaes
+    visible_algaes = [algae for algae in algaes if algae.right > -50]
+    return visible_algaes
 
 def draw_algae(algaes):
     algaes = move_algae(algaes)
@@ -27,10 +28,12 @@ def draw_algae(algaes):
             screen.blit(flipped_algae, algae)
         
 def check_for_collision(algaes):
+    global can_score
     for algae in algaes:
         if(player_rect.colliderect(algae)):
             return False
     if player_rect.top <= -100 or player_rect.bottom >= 900:
+         can_score = True
          return False
     return True    
 
@@ -66,20 +69,33 @@ def update_highscore(high_score):
     if score > high_score:
         high_score = score
     return high_score    
+
+def algae_score_check():
+    global score, can_score
+    
+    if algae_list:
+        for algae in algae_list:          
+            if 105 < algae.centerx < 115 and can_score:
+                score += 1
+                can_score = False
+            if algae.centerx < 0:
+                can_score = True    
                 
+                    
 pygame.init()
 
-# general
+# general global variables
 game_active = True
 score = 0
 high_score = 0
+can_score = True
 
 clock = pygame.time.Clock()
-game_font = pygame.font.Font('src/fonts/font.otf', 40)
-game_highscore_font = pygame.font.Font('src/fonts/font.otf', 80)
+game_font = pygame.font.Font('./fonts/font.otf', 40)
+game_highscore_font = pygame.font.Font('./fonts/font.otf', 80)
 
 # background
-background = pygame.image.load('src/images/background.png')
+background = pygame.image.load('./images/background.png')
 background_x_pos = 0
 background_movement_velocity = -2
 size = width, height = 576, 1024
@@ -88,8 +104,8 @@ screen = pygame.display.set_mode(size)
 screen.blit(background, (0, 0))
 
 # player
-player_idle = pygame.image.load('src/images/normal.png')
-player_jump = pygame.image.load('src/images/jump.png')
+player_idle = pygame.image.load('./images/normal.png')
+player_jump = pygame.image.load('./images/jump.png')
 player_frames = [player_idle, player_jump]
 player_frame_index = 0
 player_x = 100
@@ -103,7 +119,7 @@ player_surface = player_frames[player_frame_index]
 player_rect = player_surface.get_rect(center=(player_x, player_y))
 
 # algae entities
-algae_bottom = pygame.image.load('src/images/algae_bottom.png')
+algae_bottom = pygame.image.load('.//images/algae_bottom.png')
 algae_list = []
 SPAWNALGAE = pygame.USEREVENT
 
@@ -113,6 +129,7 @@ algae_height = [600, 700, 800]
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
@@ -147,7 +164,7 @@ while True:
         # algae
         draw_algae(algae_list)
         # score
-        score += 0.01
+        algae_score_check()
         high_score = update_highscore(high_score)
         display_score()
     else:
