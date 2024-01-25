@@ -17,4 +17,9 @@ Grab the latest release of Python from [here](https://www.python.org/downloads/)
 3. Linux:
 Same as windows.
 
- execute  ``python main.py``.
+### Playing FlappyCaudate
+ Windows: execute  ``python src/Flappy/caudate.py``.
+ Mac / Linux : execute  ``python3 src/Flappy/caudate.py``.
+
+### Playing CaudateShooter
+WIP
